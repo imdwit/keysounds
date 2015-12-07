@@ -18,6 +18,7 @@ function playMenu() {
 		label: 'Play',
 		click: playingMenu
 	});
+	tray.setImage('./play.png');
 	mainWindow && mainWindow.webContents.send('stop');
 }
 
@@ -26,6 +27,7 @@ function playingMenu() {
 		label: 'Stop',
 		click: playMenu
 	});
+	tray.setImage('./pause.png');
 	mainWindow.webContents.send('play');
 }
 
