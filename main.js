@@ -1,42 +1,41 @@
 const electron = require('electron');
+const path = require('path');
+const app = require('app');
+const Tray = require('tray');
+const Menu = require('menu');
+const MenuItem = require('menu-item');
+const Browser = electron.BrowserWindow;
+const ipcMain = electron.ipcMain;
+var mainWindow, tray, keys;
+function createProjectMenu(attrs) {
+	var menu = new Menu();
+	menu.append(new MenuItem(attrs));
+	tray.setContextMenu(menu);
+}
 
-const app = electron.app;
+function playMenu() {
+	createProjectMenu({
+		label: 'Play',
+		click: playingMenu
+	});
+	mainWindow && mainWindow.webContents.send('stop');
+}
 
-const BrowserWindow = electron.BrowserWindow;  // Module to create native browser window.
+function playingMenu() {
+	createProjectMenu({
+		label: 'Stop',
+		click: playMenu
+	});
+	mainWindow.webContents.send('play');
+}
 
-// Report crashes to our server.
-electron.crashReporter.start();
-
-// Keep a global reference of the window object, if you don't, the window will
-// be closed automatically when the JavaScript object is garbage collected.
-var mainWindow = null;
-
-// Quit when all windows are closed.
-app.on('window-all-closed', function() {
-  // On OS X it is common for applications and their menu bar
-  // to stay active until the user quits explicitly with Cmd + Q
-  if (process.platform != 'darwin') {
-    app.quit();
-  }
-});
-
-// This method will be called when Electron has finished
-// initialization and is ready to create browser windows.
 app.on('ready', function() {
-  // Create the browser window.
-  mainWindow = new BrowserWindow({width: 800, height: 600});
-
-  // and load the index.html of the app.
-  mainWindow.loadURL('file://' + __dirname + '/index.html');
-
-  // Open the DevTools.
-  mainWindow.webContents.openDevTools();
-
-  // Emitted when the window is closed.
-  mainWindow.on('closed', function() {
-    // Dereference the window object, usually you would store windows
-    // in an array if your app supports multi windows, this is the time
-    // when you should delete the corresponding element.
-    mainWindow = null;
-  });
+	tray = new Tray(path.join(__dirname, '/play.png'));
+	playMenu();
+	mainWindow = new Browser({height: 0, width: 0});
+	mainWindow.loadUrl('file://'+__dirname+'/index.html');
+	mainWindow.webContents.openDevTools();
+	mainWindow.on('closed', function() {
+	 mainWindow = null;
+ });
 });
