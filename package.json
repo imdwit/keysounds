@@ -1,5 +1,10 @@
 {
-	"version" : "1.0.0",
-	"name" : "KeySounds",
-	"main" : "main.js"
+  "version": "1.0.0",
+  "name": "KeySounds",
+  "main": "main.js",
+  "devDependencies": {
+  },
+  "dependencies": {
+    "electron-prebuilt": "^0.35.4"
+  }
 }
