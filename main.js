@@ -7,9 +7,20 @@ const MenuItem = require('menu-item');
 const Browser = electron.BrowserWindow;
 const ipcMain = electron.ipcMain;
 var mainWindow, tray, keys;
+
+function quitApp() {
+	app.quit();
+}
 function createProjectMenu(attrs) {
 	var menu = new Menu();
 	menu.append(new MenuItem(attrs));
+	menu.append(new MenuItem({
+		type: 'separator'
+	}));
+	menu.append(new MenuItem({
+		label: 'Quit',
+		click: quitApp
+	}));
 	tray.setContextMenu(menu);
 }
 
